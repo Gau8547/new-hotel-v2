@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="navbar">✏️ Edit Booking</div>
+
+<div class="main">
+
+<a href="/bookings" class="back-btn">⬅ Back</a>
+
+<h2>Edit Booking</h2>
+
+<form method="POST">
+
+<input type="date" name="checkin" value="{{ booking[4] }}"><br>
+
+<input name="duration" value="{{ booking[5] }}"><br>
+
+<button>Update Booking</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>New Booking</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="navbar">➕ New Booking</div>
+
+<div class="main">
+
+<a href="/" class="back-btn">⬅ Back</a>
+
+<h2>New Booking</h2>
+
+<form method="POST" class="form-box">
+
+<!-- Customer Name -->
+<input type="text" name="name" placeholder="Customer Name" required>
+
+<!-- Phone -->
+<input type="text" name="phone" placeholder="Phone Number" required>
+
+<!-- Room Dropdown -->
+<select name="room_id" required>
+<option value="">Select Room</option>
+
+{% for r in rooms %}
+<option value="{{ r[0] }}">Room {{ r[1] }}</option>
+{% endfor %}
+
+</select>
+
+<!-- Check-in Date -->
+<input type="date" name="checkin" required>
+
+<!-- Duration -->
+<input type="number" name="duration" placeholder="Duration" required>
+
+<!-- Duration Type -->
+<select name="duration_type">
+<option value="days">Days</option>
+<option value="months">Months</option>
+</select>
+
+<br>
+
+<button type="submit" class="btn">Book Room</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

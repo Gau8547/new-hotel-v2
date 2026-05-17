@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="navbar">🏨 Hotel Management</div>
+
+<div class="sidebar">
+    <a href="/">Dashboard</a>
+    <a href="/rooms">Rooms</a>
+    <a href="/add_room">Add Room</a>
+    <a href="/booking">New Booking</a>
+    <a href="/bookings">Bookings</a>
+    <a href="/logout">Logout</a>
+</div>
+
+<div class="main">
+
+<h2>Dashboard</h2>
+
+<div class="card-box">
+
+    <div class="card-small">
+        <h3>Total Rooms</h3>
+        <p>{{ total_rooms }}</p>
+    </div>
+
+    <div class="card-small">
+        <h3>Available</h3>
+        <p>{{ available_rooms }}</p>
+    </div>
+
+    <div class="card-small">
+        <h3>Occupied</h3>
+        <p>{{ occupied_rooms }}</p>
+    </div>
+
+</div>
+
+<br>
+
+<div class="card-box">
+
+    <div class="card-small alert-red">
+        <h3>Overdue</h3>
+        <p>{{ overdue_count }}</p>
+    </div>
+
+    <div class="card-small alert-yellow">
+        <h3>Due Today</h3>
+        <p>{{ due_today_count }}</p>
+    </div>
+
+</div>
+
+</div>
+
+</body>
+</html>

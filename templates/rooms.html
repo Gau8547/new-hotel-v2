@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Rooms</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<script>
+alert("{{ messages[0] }}");
+</script>
+{% endif %}
+{% endwith %}
+
+<body>
+
+<div class="navbar">🏨 Rooms</div>
+
+<div class="main">
+
+<a href="/" class="back-btn">⬅ Back</a>
+
+<h2>Rooms</h2>
+
+<!-- 🔍 SEARCH + FILTER -->
+<form method="GET">
+<input type="text" name="search" placeholder="Search room number">
+
+<select name="status">
+<option value="">All</option>
+<option value="Available">Available</option>
+<option value="Occupied">Occupied</option>
+<option value="Cleaning">Cleaning</option>
+</select>
+
+<button type="submit">Search</button>
+</form>
+
+<br>
+
+<!-- 🏢 GROUP BY FLOOR -->
+{% for floor, rooms in grouped.items() %}
+
+<h3>Floor {{ floor }}xx</h3>
+
+<table>
+<tr>
+<th>Room</th>
+<th>Type</th>
+<th>Rent</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+{% for r in rooms %}
+<tr>
+
+<td>{{ r[1] }}</td>
+<td>{{ r[2] }}</td>
+<td>{{ r[3] }}</td>
+
+<!-- STATUS -->
+<td class="
+{% if r[4]=='Available' %}status-available
+{% elif r[4]=='Cleaning' %}status-cleaning
+{% else %}status-occupied
+{% endif %}
+">
+{{ r[4] }}
+</td>
+
+<!-- ✅ ONLY ONE ACTION COLUMN -->
+<td>
+
+<a href="/edit_room/{{ r[0] }}">✏️</a> |
+
+{% if r[4]=='Cleaning' %}
+<a href="/clean_done/{{ r[0] }}">🧹 Done</a> |
+{% endif %}
+
+<a href="/delete_room/{{ r[0] }}" onclick="return confirm('Delete this room?')">❌</a>
+{% if r[4]=='Inactive' %}
+<a href="/restore_room/{{ r[0] }}">♻️ Restore</a>
+{% endif %}
+</td>
+
+</tr>
+{% endfor %}
+
+</table>
+
+<br>
+
+{% endfor %}
+
+</div>
+
+</body>
+</html>

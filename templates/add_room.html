@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Add Room</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="navbar">🏨 Add Room</div>
+
+<div class="main">
+
+<!-- ✅ BACK BUTTON -->
+<a href="/rooms" class="back-btn">⬅ Back</a>
+
+<h2>Add Room</h2>
+
+<form method="POST">
+
+<input name="room_no" placeholder="Room Number"><br>
+<input name="type" placeholder="Room Type"><br>
+<input name="rent" placeholder="Rent"><br>
+
+<select name="status">
+<option>Available</option>
+<option>Occupied</option>
+</select><br><br>
+
+<button>Add Room</button>
+
+
+</form>
+
+
+</div>
+
+</body>
+</html>

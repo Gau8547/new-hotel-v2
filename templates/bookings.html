@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="navbar">📋 Bookings</div>
+
+<div class="main">
+
+<a href="/" class="back-btn">⬅ Back</a>
+
+<h2>Bookings</h2>
+
+<table>
+<tr>
+<th>Name</th>
+<th>Room</th>
+<th>Check-in</th>
+<th>Due Date</th>
+<th>Status</th>
+<th>Action</th>
+<th>Payment</th>
+</tr>
+
+{% for b in bookings %}
+<tr>
+<td>{{ b[1] }}</td>
+<td>{{ b[7] }}</td>
+<td>{{ b[4] }}</td>
+<td>{{ b[6] }}</td>
+
+<td>
+{% if b[7] == 'Paid' %}
+<span style="color:green;">Paid</span>
+{% else %}
+<span style="color:red;">Pending</span>
+{% endif %}
+</td>
+
+<td class="
+{% if b[8]=='Active' %}status-active
+{% elif b[8]=='Due Today' %}status-due
+{% else %}status-overdue
+{% endif %}
+">
+{{ b[8] }}
+</td>
+
+<td>
+<a href="/pay/{{ b[0] }}" class="pay-btn">Pay</a>
+</td>
+<td>
+<a href="/pay/{{ b[0] }}" class="pay-btn">Pay</a> |
+<a href="/checkout/{{ b[0] }}" onclick="return confirm('Checkout this room?')">🚪 Checkout</a>
+</td>
+
+<td>
+<a href="/pay/{{ b[0] }}" class="pay-btn">Pay</a> |
+<a href="/edit_booking/{{ b[0] }}">✏️ Edit</a> |
+<a href="/checkout/{{ b[0] }}">🚪 Checkout</a>
+<a href="/bill/{{ b[0] }}">📄 PDF</a>
+</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="navbar">✏️ Edit Room</div>
+
+<div class="main">
+
+<a href="/rooms" class="back-btn">⬅ Back</a>
+
+<h2>Edit Room</h2>
+
+<form method="POST">
+
+<input name="room_no" value="{{ room[1] }}"><br>
+<input name="type" value="{{ room[2] }}"><br>
+<input name="rent" value="{{ room[3] }}"><br>
+
+<select name="status">
+<option {% if room[4]=='Available' %}selected{% endif %}>Available</option>
+<option {% if room[4]=='Occupied' %}selected{% endif %}>Occupied</option>
+</select><br><br>
+
+<button>Update</button>
+
+</form>
+
+</div>
+
+</body>
+</html>
