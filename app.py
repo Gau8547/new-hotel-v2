@@ -222,31 +222,16 @@ def booking():
             conn.commit()
             conn.close()
 
-            return redirect('/rooms')   # ✅ FIXED
+            return redirect('/rooms')
 
-except Exception as e:
-    import traceback
-    return "<pre>" + traceback.format_exc() + "</pre>"
+        except Exception as e:
+            import traceback
+            return "<pre>" + traceback.format_exc() + "</pre>"
+
     conn.close()
     return render_template("booking.html", rooms=rooms)
-# ---------------- add payment system ----------------
 
-@app.route('/pay/<int:id>')
-def pay(id):
-    conn = sqlite3.connect("hotel.db")
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    UPDATE bookings SET payment_status='Paid'
-    WHERE id=?
-    """, (id,))
-
-    conn.commit()
-    conn.close()
-
-    return redirect('/bookings')
-
-    # ---------------- add checkout----------------
+# ---------------- add checkout----------------
 
 @app.route('/checkout/<int:id>')
 def checkout(id):
