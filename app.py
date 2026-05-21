@@ -222,7 +222,7 @@ def booking():
             conn.commit()
             conn.close()
 
-            return redirect('/bookings')
+            return redirect('/rooms')   # ✅ FIXED
 
         except Exception as e:
             return str(e)
@@ -433,28 +433,29 @@ def restore_room(id):
     return redirect('/rooms')
 
 # ---------------- add room ----------------
+@app.route('/rooms')
+def rooms():
+    import sqlite3
+    from flask import render_template, request
 
-@app.route('/add_room', methods=['GET','POST'])
-def add_room():
-    if request.method == 'POST':
-        room_no = request.form['room_no']
-        type = request.form['type']
-        rent = request.form['rent']
+    conn = sqlite3.connect("hotel.db")
+    cursor = conn.cursor()
 
-        conn = sqlite3.connect("hotel.db")
-        cursor = conn.cursor()
+    cursor.execute("SELECT * FROM rooms")
+    data = cursor.fetchall()
 
-        cursor.execute("""
-        INSERT INTO rooms (room_no, type, rent, status)
-        VALUES (?,?,?,?)
-        """, (room_no, type, rent, "Available"))
+    # group by floor
+    grouped = {}
+    for r in data:
+        floor = str(r[1])[0]  # first digit of room number
+        if floor not in grouped:
+            grouped[floor] = []
+        grouped[floor].append(r)
 
-        conn.commit()
-        conn.close()
+    conn.close()
 
-        return redirect('/rooms')
+    return render_template("rooms.html", grouped=grouped)
 
-    return render_template("add_room.html")
 # ---------------- delete room ----------------
 
 @app.route('/delete_room/<int:id>')
