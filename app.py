@@ -184,6 +184,7 @@ def rooms():
     return render_template("rooms.html", grouped=grouped)
 
 # ---------------- BOOKING ----------------
+
 @app.route('/booking', methods=['GET','POST'])
 def booking():
     import sqlite3
@@ -472,9 +473,13 @@ def delete_room(id):
         return redirect('/rooms')
 
     except Exception as e:
-        return str(e)
+        return str(e)# 
 
-# ---------------- RUN ----------------
+
+@app.route('/')
+def home():
+    return "APP IS RUNNING"
+---------------- RUN ----------------
 if __name__ == '__main__':
     init_db()
     app.run(debug=True)
