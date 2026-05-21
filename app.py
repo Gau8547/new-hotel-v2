@@ -146,6 +146,10 @@ def home():
 # ---------------- ROOMS ----------------
 @app.route('/rooms')
 def rooms():
+    import sqlite3
+    from flask import render_template, request, redirect, session
+
+    # 🔐 Login check
     if 'admin' not in session:
         return redirect('/login')
 
@@ -155,6 +159,7 @@ def rooms():
     conn = sqlite3.connect("hotel.db")
     cursor = conn.cursor()
 
+    # 🔍 Base query
     query = "SELECT * FROM rooms WHERE 1=1"
     params = []
 
@@ -169,20 +174,18 @@ def rooms():
         params.append(status)
 
     cursor.execute(query, params)
-    rooms = cursor.fetchall()
+    rooms_data = cursor.fetchall()
     conn.close()
 
     # 🏢 Group by floor
     grouped = {}
-
-    for r in rooms:
-        floor = str(r[1])[0]  # first digit (3,4,5)
+    for r in rooms_data:
+        floor = str(r[1])[0]  # first digit (floor)
         if floor not in grouped:
             grouped[floor] = []
         grouped[floor].append(r)
 
     return render_template("rooms.html", grouped=grouped)
-
 # ---------------- BOOKING ----------------
 
 @app.route('/booking', methods=['GET','POST'])
@@ -417,29 +420,6 @@ def restore_room(id):
 
     return redirect('/rooms')
 
-# ---------------- add room ----------------
-@app.route('/rooms')
-def rooms():
-    import sqlite3
-    from flask import render_template, request
-
-    conn = sqlite3.connect("hotel.db")
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT * FROM rooms")
-    data = cursor.fetchall()
-
-    # group by floor
-    grouped = {}
-    for r in data:
-        floor = str(r[1])[0]  # first digit of room number
-        if floor not in grouped:
-            grouped[floor] = []
-        grouped[floor].append(r)
-
-    conn.close()
-
-    return render_template("rooms.html", grouped=grouped)
 
 # ---------------- delete room ----------------
 
