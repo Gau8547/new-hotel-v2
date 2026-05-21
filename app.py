@@ -184,53 +184,50 @@ def rooms():
     return render_template("rooms.html", grouped=grouped)
 
 # ---------------- BOOKING ----------------
-
 @app.route('/booking', methods=['GET','POST'])
 def booking():
+    import sqlite3
+    from flask import request, redirect, render_template
+
     conn = sqlite3.connect("hotel.db")
     cursor = conn.cursor()
 
-    # ✅ GET ONLY AVAILABLE ROOMS
     cursor.execute("SELECT id, room_no FROM rooms WHERE status='Available'")
     rooms = cursor.fetchall()
 
     if request.method == 'POST':
-        name = request.form['name']
-        phone = request.form['phone']
-        room_id = request.form['room_id']
-        checkin = request.form['checkin']
-        duration = int(request.form['duration'])
-        duration_type = request.form['duration_type']
+        try:
+            name = request.form.get('name')
+            phone = request.form.get('phone')
+            room_id = request.form.get('room_id')
+            checkin = request.form.get('checkin')
+            duration = request.form.get('duration')
 
-        from datetime import datetime, timedelta
+            if not all([name, phone, room_id, checkin, duration]):
+                return "Invalid input ❌"
 
-        checkin_date = datetime.strptime(checkin, "%Y-%m-%d")
+            duration = int(duration)
 
-        # ✅ HANDLE DAYS / MONTHS
-        if duration_type == "days":
-            due_date = checkin_date + timedelta(days=duration)
-        else:
-            due_date = checkin_date + timedelta(days=30 * duration)
+            from datetime import datetime, timedelta
+            due_date = (datetime.strptime(checkin, "%Y-%m-%d") + timedelta(days=duration)).strftime("%Y-%m-%d")
 
-        due_date = due_date.strftime("%Y-%m-%d")
+            cursor.execute("""
+            INSERT INTO bookings (name, phone, room_id, checkin_date, duration, due_date)
+            VALUES (?,?,?,?,?,?)
+            """, (name, phone, room_id, checkin, duration, due_date))
 
-        # ✅ INSERT BOOKING WITH PAYMENT STATUS
-        cursor.execute("""
-        INSERT INTO bookings (name, phone, room_id, checkin_date, duration, due_date, payment_status)
-        VALUES (?,?,?,?,?,?,?)
-        """, (name, phone, room_id, checkin, duration, due_date, "Pending"))
+            cursor.execute("UPDATE rooms SET status='Occupied' WHERE id=?", (room_id,))
 
-        # ✅ MAKE ROOM OCCUPIED
-        cursor.execute("UPDATE rooms SET status='Occupied' WHERE id=?", (room_id,))
+            conn.commit()
+            conn.close()
 
-        conn.commit()
-        conn.close()
+            return redirect('/bookings')
 
-        return redirect('/bookings')
+        except Exception as e:
+            return str(e)
 
     conn.close()
     return render_template("booking.html", rooms=rooms)
-    
 # ---------------- add payment system ----------------
 
 @app.route('/pay/<int:id>')
