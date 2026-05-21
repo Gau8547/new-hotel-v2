@@ -4,13 +4,6 @@
 <title>Rooms</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<script>
-alert("{{ messages[0] }}");
-</script>
-{% endif %}
-{% endwith %}
 
 <body>
 
@@ -22,7 +15,16 @@ alert("{{ messages[0] }}");
 
 <h2>Rooms</h2>
 
-<!-- 🔍 SEARCH + FILTER -->
+<!-- ALERT MESSAGE -->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<script>
+alert("{{ messages[0] }}");
+</script>
+{% endif %}
+{% endwith %}
+
+<!-- SEARCH -->
 <form method="GET">
 <input type="text" name="search" placeholder="Search room number">
 
@@ -38,7 +40,7 @@ alert("{{ messages[0] }}");
 
 <br>
 
-<!-- 🏢 GROUP BY FLOOR -->
+<!-- ROOMS -->
 {% for floor, rooms in grouped.items() %}
 
 <h3>Floor {{ floor }}xx</h3>
@@ -69,7 +71,7 @@ alert("{{ messages[0] }}");
 {{ r[4] }}
 </td>
 
-<!-- ✅ ONLY ONE ACTION COLUMN -->
+<!-- ACTION -->
 <td>
 
 <a href="/edit_room/{{ r[0] }}">✏️</a> |
@@ -78,10 +80,13 @@ alert("{{ messages[0] }}");
 <a href="/clean_done/{{ r[0] }}">🧹 Done</a> |
 {% endif %}
 
+<!-- DELETE -->
 <a href="/delete_room/{{ r[0] }}" onclick="return confirm('Delete this room?')">❌</a>
+
 {% if r[4]=='Inactive' %}
-<a href="/restore_room/{{ r[0] }}">♻️ Restore</a>
+| <a href="/restore_room/{{ r[0] }}">♻️ Restore</a>
 {% endif %}
+
 </td>
 
 </tr>

@@ -454,7 +454,26 @@ def add_room():
         return redirect('/rooms')
 
     return render_template("add_room.html")
-    
+# ---------------- delete room ----------------
+
+@app.route('/delete_room/<int:id>')
+def delete_room(id):
+    import sqlite3
+    from flask import redirect
+
+    try:
+        conn = sqlite3.connect("hotel.db")
+        cursor = conn.cursor()
+
+        cursor.execute("DELETE FROM rooms WHERE id=?", (id,))
+        conn.commit()
+        conn.close()
+
+        return redirect('/rooms')
+
+    except Exception as e:
+        return str(e)
+
 # ---------------- RUN ----------------
 if __name__ == '__main__':
     init_db()
