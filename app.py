@@ -479,7 +479,7 @@ def delete_room(id):
 @app.route('/')
 def home():
     return "APP IS RUNNING"
----------------- RUN ----------------
+# ---------------- RUN ----------------
 if __name__ == '__main__':
     init_db()
     app.run(debug=True)
