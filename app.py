@@ -224,9 +224,9 @@ def booking():
 
             return redirect('/rooms')   # ✅ FIXED
 
-        except Exception as e:
-            return str(e)
-
+except Exception as e:
+    import traceback
+    return "<pre>" + traceback.format_exc() + "</pre>"
     conn.close()
     return render_template("booking.html", rooms=rooms)
 # ---------------- add payment system ----------------
