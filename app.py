@@ -198,8 +198,7 @@ def booking():
 
     cursor.execute("SELECT id, room_no FROM rooms WHERE status='Available'")
     rooms = cursor.fetchall()
-
- if request.method == 'POST':
+if request.method == 'POST':
     try:
         name = request.form.get('name')
         phone = request.form.get('phone')
@@ -225,7 +224,7 @@ def booking():
         conn.commit()
         conn.close()
 
-        return redirect('/bookings')   # ✅ CORRECT PLACE
+        return redirect('/bookings')
 
     except Exception as e:
         import traceback
@@ -233,7 +232,9 @@ def booking():
 
 conn.close()
 return render_template("booking.html", rooms=rooms)
-# ---------------- add checkout----------------
+
+  
+ # ---------------- add checkout----------------
 
 @app.route('/checkout/<int:id>')
 def checkout(id):
