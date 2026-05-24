@@ -225,7 +225,7 @@ def booking():
             conn.commit()
             conn.close()
 
-            return redirect('/rooms')
+     return redirect('/bookings')
 
         except Exception as e:
             import traceback
@@ -445,6 +445,27 @@ def delete_room(id):
 @app.route('/')
 def home():
     return "APP IS RUNNING"
+# ---------------- bookings ----------------
+
+@app.route('/bookings')
+def bookings():
+    import sqlite3
+    from flask import render_template
+
+    conn = sqlite3.connect("hotel.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT bookings.*, rooms.room_no
+    FROM bookings
+    JOIN rooms ON bookings.room_id = rooms.id
+    """)
+    
+    data = cursor.fetchall()
+    conn.close()
+
+    return render_template("bookings.html", bookings=data)
+
 # ---------------- RUN ----------------
 if __name__ == '__main__':
     init_db()
