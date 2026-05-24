@@ -199,41 +199,40 @@ def booking():
     cursor.execute("SELECT id, room_no FROM rooms WHERE status='Available'")
     rooms = cursor.fetchall()
 
-    if request.method == 'POST':
-        try:
-            name = request.form.get('name')
-            phone = request.form.get('phone')
-            room_id = request.form.get('room_id')
-            checkin = request.form.get('checkin')
-            duration = request.form.get('duration')
+ if request.method == 'POST':
+    try:
+        name = request.form.get('name')
+        phone = request.form.get('phone')
+        room_id = request.form.get('room_id')
+        checkin = request.form.get('checkin')
+        duration = request.form.get('duration')
 
-            if not all([name, phone, room_id, checkin, duration]):
-                return "Invalid input ❌"
+        if not all([name, phone, room_id, checkin, duration]):
+            return "Invalid input ❌"
 
-            duration = int(duration)
+        duration = int(duration)
 
-            from datetime import datetime, timedelta
-            due_date = (datetime.strptime(checkin, "%Y-%m-%d") + timedelta(days=duration)).strftime("%Y-%m-%d")
+        from datetime import datetime, timedelta
+        due_date = (datetime.strptime(checkin, "%Y-%m-%d") + timedelta(days=duration)).strftime("%Y-%m-%d")
 
-            cursor.execute("""
-            INSERT INTO bookings (name, phone, room_id, checkin_date, duration, due_date)
-            VALUES (?,?,?,?,?,?)
-            """, (name, phone, room_id, checkin, duration, due_date))
+        cursor.execute("""
+        INSERT INTO bookings (name, phone, room_id, checkin_date, duration, due_date)
+        VALUES (?,?,?,?,?,?)
+        """, (name, phone, room_id, checkin, duration, due_date))
 
-            cursor.execute("UPDATE rooms SET status='Occupied' WHERE id=?", (room_id,))
+        cursor.execute("UPDATE rooms SET status='Occupied' WHERE id=?", (room_id,))
 
-            conn.commit()
-            conn.close()
+        conn.commit()
+        conn.close()
 
-     return redirect('/bookings')
+        return redirect('/bookings')   # ✅ CORRECT PLACE
 
-        except Exception as e:
-            import traceback
-            return "<pre>" + traceback.format_exc() + "</pre>"
+    except Exception as e:
+        import traceback
+        return "<pre>" + traceback.format_exc() + "</pre>"
 
-    conn.close()
-    return render_template("booking.html", rooms=rooms)
-
+conn.close()
+return render_template("booking.html", rooms=rooms)
 # ---------------- add checkout----------------
 
 @app.route('/checkout/<int:id>')
